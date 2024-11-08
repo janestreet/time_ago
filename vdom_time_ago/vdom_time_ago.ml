@@ -98,159 +98,157 @@ let view ?(format = Format.Time_ago) reference =
     ()
 ;;
 
-let%test_module _ =
-  (module struct
-    let time_init = Time_ns.epoch
+module%test _ = struct
+  let time_init = Time_ns.epoch
 
-    let print_time_to_next_change format span =
-      let now = Time_ns.add time_init span in
-      time_to_next_change format now time_init |> printf !"%{Time_ns.Span}\n"
-    ;;
+  let print_time_to_next_change format span =
+    let now = Time_ns.add time_init span in
+    time_to_next_change format now time_init |> printf !"%{Time_ns.Span}\n"
+  ;;
 
-    let%expect_test "next change - elapsed: Time_ago" =
-      Time_ns.Span.
-        [ of_sec 29.
-        ; of_sec 29. + of_ms 500.
-        ; of_min 2.
-        ; of_min 44. + of_sec 12.
-        ; of_min 45. + of_sec 30.
-        ; of_min 89. + of_sec 30.
-        ; of_min 90.
-        ; of_hr 17. + of_min 20.
-        ; of_hr 18.
-        ; of_hr 27. + of_min 40.
-        ; of_hr 28. + of_min 30.
-        ; of_hr 43. + of_min 11.
-        ; of_hr 44. + of_min 30.
-        ; of_day 3. + of_hr 12.
-        ; of_day 299.
-        ; of_day 359.
-        ]
-      |> List.iter ~f:(print_time_to_next_change Time_ago);
-      [%expect
-        {|
-        1s
-        500ms
-        1m
-        48s
-        44m30s
-        30s
-        30m
-        40m
-        10h
-        20m
-        15h30m
-        49m
-        3h30m
-        12h
-        1d
-        1d
-        |}]
-    ;;
+  let%expect_test "next change - elapsed: Time_ago" =
+    Time_ns.Span.
+      [ of_sec 29.
+      ; of_sec 29. + of_ms 500.
+      ; of_min 2.
+      ; of_min 44. + of_sec 12.
+      ; of_min 45. + of_sec 30.
+      ; of_min 89. + of_sec 30.
+      ; of_min 90.
+      ; of_hr 17. + of_min 20.
+      ; of_hr 18.
+      ; of_hr 27. + of_min 40.
+      ; of_hr 28. + of_min 30.
+      ; of_hr 43. + of_min 11.
+      ; of_hr 44. + of_min 30.
+      ; of_day 3. + of_hr 12.
+      ; of_day 299.
+      ; of_day 359.
+      ]
+    |> List.iter ~f:(print_time_to_next_change Time_ago);
+    [%expect
+      {|
+      1s
+      500ms
+      1m
+      48s
+      44m30s
+      30s
+      30m
+      40m
+      10h
+      20m
+      15h30m
+      49m
+      3h30m
+      12h
+      1d
+      1d
+      |}]
+  ;;
 
-    let%expect_test "next change - elapsed: Short_string_ago" =
-      Time_ns.Span.
-        [ of_sec 29.
-        ; of_sec 29. + of_ms 500.
-        ; of_min 2.
-        ; of_min 44. + of_sec 12.
-        ; of_min 45. + of_sec 30.
-        ; of_min 89. + of_sec 30.
-        ; of_min 90.
-        ; of_hr 17. + of_min 20.
-        ; of_hr 18.
-        ; of_hr 27. + of_min 40.
-        ; of_hr 28. + of_min 30.
-        ; of_hr 43. + of_min 11.
-        ; of_hr 44. + of_min 30.
-        ; of_day 3. + of_hr 12.
-        ; of_day 299.
-        ; of_day 359.
-        ]
-      |> List.iter ~f:(print_time_to_next_change Short_string_ago);
-      [%expect
-        {|
-        1s
-        500ms
-        6s
-        48s
-        30s
-        30s
-        6m
-        40m
-        1h
-        1h20m
-        30m
-        49m
-        1h30m
-        3h
-        1d
-        1d
-        |}]
-    ;;
+  let%expect_test "next change - elapsed: Short_string_ago" =
+    Time_ns.Span.
+      [ of_sec 29.
+      ; of_sec 29. + of_ms 500.
+      ; of_min 2.
+      ; of_min 44. + of_sec 12.
+      ; of_min 45. + of_sec 30.
+      ; of_min 89. + of_sec 30.
+      ; of_min 90.
+      ; of_hr 17. + of_min 20.
+      ; of_hr 18.
+      ; of_hr 27. + of_min 40.
+      ; of_hr 28. + of_min 30.
+      ; of_hr 43. + of_min 11.
+      ; of_hr 44. + of_min 30.
+      ; of_day 3. + of_hr 12.
+      ; of_day 299.
+      ; of_day 359.
+      ]
+    |> List.iter ~f:(print_time_to_next_change Short_string_ago);
+    [%expect
+      {|
+      1s
+      500ms
+      6s
+      48s
+      30s
+      30s
+      6m
+      40m
+      1h
+      1h20m
+      30m
+      49m
+      1h30m
+      3h
+      1d
+      1d
+      |}]
+  ;;
 
-    let%expect_test "next change out of search range - elapsed" =
-      Time_ns.Span.[ of_day 30. + of_hr 12.; of_day 300.; of_day 700. ]
-      |> List.iter ~f:(print_time_to_next_change Time_ago);
-      [%expect
-        {|
-        1d12h24m32s
-        1d12h24m32s
-        1d12h24m32s
-        |}]
-    ;;
+  let%expect_test "next change out of search range - elapsed" =
+    Time_ns.Span.[ of_day 30. + of_hr 12.; of_day 300.; of_day 700. ]
+    |> List.iter ~f:(print_time_to_next_change Time_ago);
+    [%expect
+      {|
+      1d12h24m32s
+      1d12h24m32s
+      1d12h24m32s
+      |}]
+  ;;
 
-    let%expect_test "next change - future" =
-      Time_ns.Span.
-        [ of_sec 31.
-        ; of_sec 90.
-        ; of_sec 90. + of_ms 500.
-        ; of_min 45. - of_ms 1.
-        ; of_min 45. + of_sec 12.
-        ; of_min 90.
-        ; of_min 90. + of_sec 32.
-        ; of_hr 18. - of_ms 1.
-        ; of_hr 18. + of_min 20.
-        ; of_hr 28. - of_ms 1.
-        ; of_hr 28. + of_min 40.
-        ; of_hr 44. - of_ms 1.
-        ; of_hr 44. + of_min 11.
-        ; of_day 3. - of_ms 1.
-        ; of_day 26. - of_ms 1.
-        ; of_day 300.
-        ]
-      |> List.map ~f:Time_ns.Span.neg
-      |> List.iter ~f:(print_time_to_next_change Time_ago);
-      [%expect
-        {|
-        1s
-        1m
-        500ms
-        1m
-        12s
-        45m
-        32s
-        1h
-        20m
-        10h
-        40m
-        16h
-        11m
-        1d
-        1d
-        500ms
-        |}]
-    ;;
+  let%expect_test "next change - future" =
+    Time_ns.Span.
+      [ of_sec 31.
+      ; of_sec 90.
+      ; of_sec 90. + of_ms 500.
+      ; of_min 45. - of_ms 1.
+      ; of_min 45. + of_sec 12.
+      ; of_min 90.
+      ; of_min 90. + of_sec 32.
+      ; of_hr 18. - of_ms 1.
+      ; of_hr 18. + of_min 20.
+      ; of_hr 28. - of_ms 1.
+      ; of_hr 28. + of_min 40.
+      ; of_hr 44. - of_ms 1.
+      ; of_hr 44. + of_min 11.
+      ; of_day 3. - of_ms 1.
+      ; of_day 26. - of_ms 1.
+      ; of_day 300.
+      ]
+    |> List.map ~f:Time_ns.Span.neg
+    |> List.iter ~f:(print_time_to_next_change Time_ago);
+    [%expect
+      {|
+      1s
+      1m
+      500ms
+      1m
+      12s
+      45m
+      32s
+      1h
+      20m
+      10h
+      40m
+      16h
+      11m
+      1d
+      1d
+      500ms
+      |}]
+  ;;
 
-    let%expect_test "next change out of search range - future" =
-      Time_ns.Span.[ of_day 32.; of_day 299. ]
-      |> List.map ~f:Time_ns.Span.neg
-      |> List.iter ~f:(print_time_to_next_change Time_ago);
-      [%expect
-        {|
-        1d12h24m32s
-        1d12h24m32s
-        |}]
-    ;;
-  end)
-;;
+  let%expect_test "next change out of search range - future" =
+    Time_ns.Span.[ of_day 32.; of_day 299. ]
+    |> List.map ~f:Time_ns.Span.neg
+    |> List.iter ~f:(print_time_to_next_change Time_ago);
+    [%expect
+      {|
+      1d12h24m32s
+      1d12h24m32s
+      |}]
+  ;;
+end
