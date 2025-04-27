@@ -11,10 +11,9 @@ module Format : sig
     | Short_string_until
 end
 
-(** Time-ago-widget creates a time ago text field, that displays the time remaining
-    to, or the time elapsed from a particular reference time. This read-friendly
-    string is automatically updated. When the reference time in the model changes,
-    the widget automatically updates.
-*)
+(** Time-ago-widget creates a time ago text field, that displays the time remaining to, or
+    the time elapsed from a particular reference time. This read-friendly string is
+    automatically updated. When the reference time in the model changes, the widget
+    automatically updates. *)
 
 val view : ?format:Format.t -> Time_ns.t -> Vdom.Node.t
