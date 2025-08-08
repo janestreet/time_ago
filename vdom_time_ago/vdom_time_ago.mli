@@ -9,6 +9,7 @@ module Format : sig
     | Time_ago
     | Short_string_ago
     | Short_string_until
+    | Custom of (now:Time_ns.t -> reference:Time_ns.t -> string)
 end
 
 (** Time-ago-widget creates a time ago text field, that displays the time remaining to, or

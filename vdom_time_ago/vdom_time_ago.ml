@@ -8,12 +8,14 @@ module Format = struct
     | Time_ago
     | Short_string_ago
     | Short_string_until
+    | Custom of (now:Time_ns.t -> reference:Time_ns.t -> string)
 
   let print t ~now reference =
     match t with
     | Time_ago -> Time_ago.to_string ~now reference
     | Short_string_ago -> Time_ns.Span.to_short_string (Time_ns.diff now reference)
     | Short_string_until -> Time_ns.Span.to_short_string (Time_ns.diff reference now)
+    | Custom f -> f ~now ~reference
   ;;
 end
 
